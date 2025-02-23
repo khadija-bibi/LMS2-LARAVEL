@@ -15,7 +15,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Department</th>
-                <th>Actions</th> {{-- Edit & Delete Buttons --}}
+                <th>Actions</th> 
             </tr>
         </thead>
         <tbody>
@@ -26,15 +26,8 @@
                     <td>{{ $teacher->user->email }}</td>
                     <td>{{ $teacher->department }}</td>
                     <td>
-                        {{-- Edit Button --}}
                         <a href="{{ route('teachers.edit', $teacher->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
-                        {{-- Delete Button --}}
-                        <form action="{{ route('teachers.destroy', $teacher->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
+                        <a onclick="return confirm('Are you sure?')" href="{{ route('teachers.destroy', encrypt($teacher->id)) }}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
             @endforeach

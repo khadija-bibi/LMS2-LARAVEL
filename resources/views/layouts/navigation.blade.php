@@ -16,6 +16,9 @@
                     <a class="nav-link" href="{{ route('teachers.index') }}">Teachers</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
+                </li>
+                <li class="nav-item">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-danger">Logout</button>

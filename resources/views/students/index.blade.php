@@ -18,7 +18,7 @@
                 <th>Roll No</th>
                 <th>Semester</th>
                 <th>Department</th>
-                <th>Actions</th>  {{-- Edit & Delete Buttons --}}
+                <th>Actions</th>  
             </tr>
         </thead>
         <tbody>
@@ -31,15 +31,8 @@
                     <td>{{ $student->semester }}</td>
                     <td>{{ $student->department }}</td>
                     <td>
-                        {{-- Edit Button --}}
                         <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
-                        {{-- Delete Button --}}
-                        <form action="{{ route('students.destroy', $student->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
+                        <a onclick="return confirm('Are you sure?')" href="{{ route('students.destroy', encrypt($student->id)) }}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
             @endforeach
