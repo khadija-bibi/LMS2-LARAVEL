@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2>Welcome to LMS Dashboard</h2>
+    <h2>Welcome, {{ Auth::user()->name }}!</h2>
     
 </div>
 @endsection

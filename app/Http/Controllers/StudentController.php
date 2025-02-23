@@ -50,6 +50,8 @@ class StudentController extends Controller
     
             ]);
     
+            $user->assignRole('student');
+
             Student::create([
                 'user_id' => $user->id,
                 'roll_no'=>$request->roll_no,

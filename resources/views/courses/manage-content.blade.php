@@ -14,7 +14,9 @@
                 <tr>
                     <th>#</th>
                     <th>File Name</th>
-                    <th>Actions</th>
+                    @can('delete content')
+                        <th>Actions</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
@@ -26,9 +28,12 @@
                                 {{ $content->file_name }}
                             </a>
                         </td>
-                        <td>
-                            <a onclick="return confirm('Are you sure?')" href="{{ route('courses.delete-content', encrypt($content->id)) }}" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
+                        @can('delete content')
+                            <td>
+                                <a onclick="return confirm('Are you sure?')" href="{{ route('courses.delete-content', encrypt($content->id)) }}" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        @endcan
+                        
                     </tr>
                 @endforeach
             </tbody>
@@ -36,12 +41,13 @@
     @else
         <p>No content uploaded yet.</p>
     @endif
-
-    {{-- Adding Content --}}
+    
+    @can('create content')
     <h2>Add Content</h2>
     <form action="{{ route('courses.store-content', $course->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="file" name="files[]" multiple required>
         <button type="submit" class="btn btn-primary btn-sm">Upload</button>
     </form>
+    @endcan 
 @endsection

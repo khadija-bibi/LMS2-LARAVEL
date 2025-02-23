@@ -6,7 +6,9 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center">
         <h2>Teachers List</h2>
-        <a href="{{ route('teachers.create') }}" class="btn btn-primary btn-sm">Create</a>
+        @can('create teacher')
+            <a href="{{ route('teachers.create') }}" class="btn btn-primary btn-sm">Create</a>
+        @endcan
     </div>
     <table class="table table-bordered mt-3">
         <thead>
@@ -26,8 +28,13 @@
                     <td>{{ $teacher->user->email }}</td>
                     <td>{{ $teacher->department }}</td>
                     <td>
-                        <a href="{{ route('teachers.edit', $teacher->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a onclick="return confirm('Are you sure?')" href="{{ route('teachers.destroy', encrypt($teacher->id)) }}" class="btn btn-danger btn-sm">Delete</a>
+                        @can('edit teacher')
+                            <a href="{{ route('teachers.edit', $teacher->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        @endcan
+
+                        @can('delete teacher')
+                            <a onclick="return confirm('Are you sure?')" href="{{ route('teachers.destroy', encrypt($teacher->id)) }}" class="btn btn-danger btn-sm">Delete</a>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

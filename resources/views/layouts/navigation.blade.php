@@ -9,15 +9,31 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('students.index') }}">Students</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('teachers.index') }}">Teachers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
-                </li>
+
+                @can('view student')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('students.index') }}">Students</a>
+                    </li>  
+                @endcan
+                
+                @can('view teacher')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('teachers.index') }}">Teachers</a>
+                    </li>  
+                @endcan
+
+                @can('view course')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('courses.index') }}">Courses</a>
+                    </li>  
+                @endcan
+
+                @can('view assignment')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('assignments.index') }}">Assignments</a>
+                    </li>  
+                @endcan
+                
                 <li class="nav-item">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

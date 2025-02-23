@@ -47,6 +47,8 @@ class TeacherController extends Controller
                 'password' => Hash::make($request->password)
             ]);
     
+            $user->assignRole('teacher'); 
+            
             Teacher::create([
                 'user_id' => $user->id,
                 'department' => $request->department

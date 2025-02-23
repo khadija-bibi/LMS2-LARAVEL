@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\StudentController;
@@ -46,4 +47,19 @@ Route::middleware('auth')->group(function(){
     Route::post('/courses/{id}/add-content', [CourseController::class, 'storeContent'])->name('courses.store-content');
 
     Route::get('/courses/content/{id}', [CourseController::class, 'deleteContent'])->name('courses.delete-content');
+
+    // Assignments Routes
+    Route::get('/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
+    Route::get('/assignments/create', [AssignmentController::class, 'create'])->name('assignments.create');
+    Route::put('/assignments/store', [AssignmentController::class, 'store'])->name('assignments.store');
+    Route::get('/assignments/{id}/edit', [AssignmentController::class, 'edit'])->name('assignments.edit');
+    Route::put('/assignments/{id}', [AssignmentController::class, 'update'])->name('assignments.update');
+    Route::get('/assignments/{id}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
+    
+    Route::get('assignments/{id}/download', [AssignmentController::class, 'download'])->name('assignments.download');
+    
+    Route::get('assignments/{id}/submit', [AssignmentController::class, 'submitForm'])->name('assignments.submit-form');
+    Route::post('assignments/{id}/submit', [AssignmentController::class, 'submit'])->name('assignments.submit');
+    Route::get('/assignments/{id}/delete-submission', [AssignmentController::class, 'deleteSubmission'])->name('assignments.delete-submission');
+
 });
