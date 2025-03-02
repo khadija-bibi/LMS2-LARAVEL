@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseContent;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -13,42 +14,65 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
+    
     public function index()
     {
-        $courses = Course::all();
-        return view('courses.index',compact('courses'));
+        $user = auth()->user();
 
+        if ($user->hasRole('student')) {
+            $student = $user->student;
+            $courses = Course::where('semester', $student->semester)->get();
+        } 
+        else if ($user->hasRole('teacher')) {
+            $teacher = $user->teacher;
+            $courses = $teacher->courses; 
+        } 
+        else {
+            $courses = Course::all();
+        }
+
+        return view('courses.index', compact('courses'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('courses.create');
+        $teachers = Teacher::with('user')->get(); 
+        return view('courses.create', compact('teachers'));
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
+   
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|min:3',
             'credit_hours' => 'required|integer|min:1|max:6',
+            'semester' => 'required|integer|between:1,8',
+            'teacher_id' => 'required|exists:teachers,id', 
         ]);
 
         if ($validator->passes()) {
             Course::create([
                 'name' => $request->name,
                 'credit_hours' => $request->credit_hours,
+                'semester' => $request->semester,
+                'teacher_id' => $request->teacher_id, 
             ]);
 
             return redirect()->route('courses.index')->with('success', 'Course added successfully!');
-        } else {
+        } 
+        else {
             return redirect()->route('courses.create')->withInput()->withErrors($validator);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -64,12 +88,14 @@ class CourseController extends Controller
     public function edit(string $id)
     {
         $course = Course::findOrFail($id);
-        return view('courses.edit', compact('course'));
+        $teachers = Teacher::with('user')->get(); 
+        return view('courses.edit', compact('course', 'teachers'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+     
     public function update(Request $request, string $id)
     {
         $course = Course::findOrFail($id);
@@ -77,12 +103,16 @@ class CourseController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|min:3',
             'credit_hours' => 'required|integer|min:1|max:6',
+            'semester' => 'required|integer|between:1,8',
+            'teacher_id' => 'required|exists:teachers,id', 
         ]);
 
         if ($validator->passes()) {
             $course->update([
                 'name' => $request->name,
                 'credit_hours' => $request->credit_hours,
+                'semester' => $request->semester,
+                'teacher_id' => $request->teacher_id, 
             ]);
 
             return redirect()->route('courses.index')->with('success', 'Course updated successfully!');
@@ -90,6 +120,7 @@ class CourseController extends Controller
             return redirect()->route('courses.edit', $id)->withInput()->withErrors($validator);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

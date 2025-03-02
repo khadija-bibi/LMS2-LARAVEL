@@ -24,8 +24,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $departments = Department::all();
-        return view('students.create', compact('departments'));
+        return view('students.create');
     }
 
     /**
@@ -38,15 +37,14 @@ class StudentController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
             'roll_no' => 'required|string|unique:students',
-            'semester' => 'required',
-            'department' => 'required'
+            'semester' => 'required|integer|between:1,8',
         ]);
        
         if ($validator->passes()) {
             $user = User::create([
                 'name'=>$request->name,
                 'email'=>$request->email,
-                'password'=>Hash::make($request->name),
+                'password'=>Hash::make($request->password),
     
             ]);
     
@@ -56,7 +54,6 @@ class StudentController extends Controller
                 'user_id' => $user->id,
                 'roll_no'=>$request->roll_no,
                 'semester'=>$request->semester,
-                'department'=>$request->department,
             ]);
             return redirect()->route('students.index')->with('success', 'Student added successfully!');
         }
@@ -94,7 +91,6 @@ class StudentController extends Controller
             'email' => 'required|email|unique:users,email,' . $student->user_id,
             'roll_no' => 'required|string|unique:students,roll_no,' . $student->id,
             'semester' => 'required',
-            'department' => 'required'
         ]);
 
         if ($validator->passes()) {
@@ -106,7 +102,6 @@ class StudentController extends Controller
             $student->update([
                 'roll_no' => $request->roll_no,
                 'semester' => $request->semester,
-                'department' => $request->department,
             ]);
     
             return redirect()->route('students.index')->with('success', 'Student updated successfully!');

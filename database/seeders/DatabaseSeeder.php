@@ -19,10 +19,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-        Department::insert([
-            ['name' => 'Computer Science'],
-            ['name' => 'Software Engineering'],
-        ]);
     }
     
 }

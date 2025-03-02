@@ -17,6 +17,8 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Credit Hours</th>
+                <th>Semester</th>
+                <th>Teacher</th>
                 <th>Actions</th>  
             </tr>
         </thead>
@@ -26,9 +28,12 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $course->name }}</td>
                     <td>{{ $course->credit_hours }}</td>
+                    <td>{{ $course->semester }}</td>
+                    <td>{{ $course->teacher ? $course->teacher->user->name : 'Not Assigned' }}</td>
+
                     <td>
                         @can('view content')
-                        <a href="{{ route('courses.manage-content', $course->id) }}" class="btn btn-primary btn-sm">Manage Content</a>
+                        <a href="{{ route('courses.manage-content', $course->id) }}" class="btn btn-primary btn-sm">Content</a>
                         @endcan
                         
                         @can('edit course')

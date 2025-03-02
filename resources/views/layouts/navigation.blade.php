@@ -33,6 +33,8 @@
                         <a class="nav-link" href="{{ route('assignments.index') }}">Assignments</a>
                     </li>  
                 @endcan
+
+                
                 
                 <li class="nav-item">
                     <form action="{{ route('logout') }}" method="POST">

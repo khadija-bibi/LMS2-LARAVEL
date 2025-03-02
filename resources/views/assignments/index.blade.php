@@ -25,7 +25,7 @@
         <tr>
             <td>{{ $assignment->description }}</td>
             <td>{{ $assignment->course->name }}</td>
-            <td>{{ $assignment->teacher->name }}</td>
+            <td>{{ $assignment->teacher->user->name ?? 'N/A' }}</td>
             <td>{{ $assignment->due_date }}</td>
             <td><a href="{{ route('assignments.download', $assignment->id) }}" target="_blank">Download</a></td>
             <td>
@@ -38,8 +38,9 @@
                 @endcan
 
                 @can('delete assignment')
-                    <a onclick="return confirm('Are you sure?')" href="{{ route('assignments.destroy', encrypt($assignment->id)) }}" class="btn btn-danger btn-sm">Delete</a>            </td>
+                    <a onclick="return confirm('Are you sure?')" href="{{ route('assignments.destroy', encrypt($assignment->id)) }}" class="btn btn-danger btn-sm">Delete</a>            
                 @endcan
+            </td>
         </tr>
         @endforeach
     </tbody>

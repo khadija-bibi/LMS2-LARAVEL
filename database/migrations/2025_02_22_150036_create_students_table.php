@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('roll_no')->unique();
-            $table->string('semester');
-            $table->foreignId('department')->constrained('departments')->onDelete('cascade');
+            $table->integer('semester');
             $table->timestamps();
         });
     }

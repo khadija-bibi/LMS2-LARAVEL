@@ -25,8 +25,7 @@ class TeacherController extends Controller
      */
     public function create()
     {
-        $departments = Department::all();
-        return view('teachers.create', compact('departments'));
+        return view('teachers.create');
     }
 
     /**
@@ -37,8 +36,7 @@ class TeacherController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:255|min:3',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'department' => 'required'
+            'password' => 'required|min:6'
         ]);
         if ($validator->passes()) {
             $user = User::create([
@@ -51,7 +49,6 @@ class TeacherController extends Controller
             
             Teacher::create([
                 'user_id' => $user->id,
-                'department' => $request->department
             ]);
     
             return redirect()->route('teachers.index')->with('success', 'Teacher added successfully!');
@@ -88,17 +85,12 @@ class TeacherController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:50|min:3',
             'email' => 'required|email|unique:users,email,' . $teacher->user_id,
-            'department' => 'required'
         ]);
 
         if ($validator->passes()) {
             $teacher->user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-            ]);
-    
-            $teacher->update([
-                'department' => $request->department,
             ]);
     
             return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully!');

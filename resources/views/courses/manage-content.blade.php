@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center">
-        <h1>Manage Content for {{ $course->name }}</h1>
+        <h1>Content for {{ $course->name }}</h1>
         <a href="{{ route('courses.index') }}" class="btn btn-primary btn-sm">Back</a>
     </div>   
     
-    <h2>Uploaded Content</h2>
+    
 
     @if ($course->contents->count() > 0)
         <table class="table table-bordered mt-3">

@@ -18,15 +18,18 @@ class Assignment extends Model
         'submission_file',
     ];
 
-    // Relationship with Course
     public function course()
     {
         return $this->belongsTo(Course::class);
     }
 
-    // Relationship with Teacher (User)
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
+
 }

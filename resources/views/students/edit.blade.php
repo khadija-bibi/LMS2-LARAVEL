@@ -39,19 +39,6 @@
                 <p class="text-danger font-medium">{{$message}}</p>  
             @enderror
         </div>
-        <div class="mb-3">
-            <label>Department</label>
-            <select name="department" class="form-control">
-                @foreach($departments as $department)
-                    <option value="{{ $department->id }}" {{ $student->department == $department->id ? 'selected' : '' }}>
-                        {{ $department->name }}
-                    </option>
-                @endforeach
-            </select>            
-            @error('department')
-                <p class="text-danger font-medium">{{$message}}</p>  
-            @enderror
-        </div>
         <button type="submit" class="btn btn-primary">Update Student</button>
     </form>
 </div>

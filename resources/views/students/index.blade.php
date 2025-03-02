@@ -19,7 +19,6 @@
                 <th>Email</th>
                 <th>Roll No</th>
                 <th>Semester</th>
-                <th>Department</th>
                 <th>Actions</th>  
             </tr>
         </thead>
@@ -31,7 +30,6 @@
                     <td>{{ $student->user->email }}</td>
                     <td>{{ $student->roll_no }}</td>
                     <td>{{ $student->semester }}</td>
-                    <td>{{ $student->department }}</td>
                     <td>
                         @can('edit student')
                             <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm">Edit</a>

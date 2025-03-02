@@ -10,22 +10,27 @@
     @method('PUT')
     <label for="course">Course:</label>
     <select name="course_id" required class="form-control">
+        <option value="" disabled selected>Select a course</option> 
         @foreach ($courses as $course)
-        <option value="{{ $course->id }}">{{ $course->name }}</option>
+            <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
+                {{ $course->name }}
+            </option>
         @endforeach
-        @error('course_id')
-                <p class="text-danger font-medium">{{$message}}</p>  
-        @enderror
     </select>
     
+    @error('course_id')
+        <p class="text-danger font-medium">{{ $message }}</p>  
+    @enderror
+    
+    
     <label for="description">Description:</label>
-    <textarea name="description" required class="form-control"></textarea>
+    <textarea name="description" required class="form-control" value="{{old('description')}}"></textarea>
     @error('description')
         <p class="text-danger font-medium">{{$message}}</p>  
     @enderror
 
     <label for="due_date">Due Date:</label>
-    <input type="datetime-local" name="due_date" required class="form-control">
+    <input type="datetime-local" name="due_date" required class="form-control" value="{{old('due_date')}}">
     @error('due_date')
         <p class="text-danger font-medium">{{$message}}</p>  
     @enderror

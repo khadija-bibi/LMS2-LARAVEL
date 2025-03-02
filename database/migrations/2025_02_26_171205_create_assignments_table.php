@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
             $table->text('description');
-            $table->dateTime('due_date');
-            $table->string('assignment_file'); // Teacher uploaded assignment
-            $table->string('submission_file')->nullable(); // Student submitted file
+            $table->date('due_date');
+            $table->string('assignment_file');
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -28,6 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assignments');
+        Schema::table('assignments', function (Blueprint $table) {
+            //
+        });
     }
 };

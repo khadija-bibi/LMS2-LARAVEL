@@ -16,7 +16,6 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Department</th>
                 <th>Actions</th> 
             </tr>
         </thead>
@@ -26,7 +25,6 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $teacher->user->name }}</td>
                     <td>{{ $teacher->user->email }}</td>
-                    <td>{{ $teacher->department }}</td>
                     <td>
                         @can('edit teacher')
                             <a href="{{ route('teachers.edit', $teacher->id) }}" class="btn btn-warning btn-sm">Edit</a>

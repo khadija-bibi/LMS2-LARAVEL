@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('credit_hours');
+            $table->integer('semester');
+            $table->foreignId('teacher_id')->nullable()->constrained('teachers')->onDelete('set null'); 
             $table->timestamps();
         });
     }

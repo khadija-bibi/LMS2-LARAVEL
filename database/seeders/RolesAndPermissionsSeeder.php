@@ -9,7 +9,7 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     public function run()
     {
-        // Pehle Cache Clear Karo
+
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         Role::query()->delete();
@@ -20,23 +20,19 @@ class RolesAndPermissionsSeeder extends Seeder
         $studentRole = Role::create(['name' => 'student']);
 
         $permissions = [
-            // **Students**
             'create student', 'edit student', 'delete student', 'view student',
 
-            // **Teachers**
             'create teacher', 'edit teacher', 'delete teacher', 'view teacher',
 
-            // **Courses**
             'create course', 'edit course', 'delete course', 'view course',
 
-            // **Content**
             'create content', 'delete content', 'view content',
 
-            // **Assignments**
             'create assignment', 'edit assignment', 'delete assignment', 'view assignment',
 
-            // **Assignment Submissions**
             'create submission', 'delete submission', 'view submission',
+
+            
         ];
 
         foreach ($permissions as $permission) {
@@ -47,16 +43,13 @@ class RolesAndPermissionsSeeder extends Seeder
             'create student', 'edit student', 'delete student', 'view student',
             'create teacher', 'edit teacher', 'delete teacher', 'view teacher',
             'create course', 'edit course', 'delete course', 'view course',
-            'create content', 'delete content', 'view content',
-            'create assignment', 'edit assignment', 'delete assignment', 'view assignment',
-            'create submission', 'delete submission', 'view submission',
         ]);
 
         $teacherRole->givePermissionTo([
+            'view course',
             'create content', 'delete content', 'view content',
             'create assignment', 'edit assignment', 'delete assignment', 'view assignment',
-            'view student',
-            'create submission', 'delete submission', 'view submission',
+            'view submission',
         ]);
 
         $studentRole->givePermissionTo([

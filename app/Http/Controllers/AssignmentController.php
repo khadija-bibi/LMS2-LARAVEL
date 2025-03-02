@@ -10,21 +10,32 @@ use Illuminate\Support\Facades\Validator;
 
 class AssignmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        $assignments = Assignment::with('course','teacher')->get();
-        return view('assignments.index',compact('assignments'));
+        $user = auth()->user();
+
+        if ($user->hasRole('teacher')) {
+            $teacher = $user->teacher;
+            $assignments = Assignment::with('course')
+                ->whereHas('course', function ($query) use ($teacher) {
+                    $query->where('teacher_id', $teacher->id);
+                })->get();
+        } 
+        if ($user->hasRole('student')) {
+            $student = $user->student;
+            $assignments = Assignment::whereHas('course', function ($query) use ($student) {
+                $query->where('semester', $student->semester); 
+            })->get();
+        } 
+        return view('assignments.index', compact('assignments'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        $courses = Course::all();
+        $teacher = auth()->user()->teacher; 
+        $courses = $teacher->courses;
         return view('assignments.create', compact('courses'));
     }
 
@@ -45,7 +56,7 @@ class AssignmentController extends Controller
         if ($validator->passes()) {
              Assignment::create([
             'course_id' => $request->course_id,
-            'teacher_id' => auth()->id(),
+            'teacher_id' => auth()->user()->teacher->id,
             'description' => $request->description,
             'due_date' => $request->due_date,
             'assignment_file' => $filePath,
@@ -72,7 +83,7 @@ class AssignmentController extends Controller
     public function edit($id)
     {
         $assignment = Assignment::findOrFail($id);
-        $courses = Course::all(); // To allow course selection in edit form
+        $courses = Course::all(); 
         return view('assignments.edit', compact('assignment', 'courses'));
     }
 
@@ -118,21 +129,29 @@ class AssignmentController extends Controller
         return redirect()->route('assignments.index')->with('success', 'Assignment deleted successfully.');
     }
 
-        public function download(string $id)
+    public function download(string $id)
     {
         $assignment = Assignment::findOrFail($id);
         $filePath = str_replace('public/', '', $assignment->assignment_file);
 
         return response()->download(storage_path("app/public/{$filePath}"));
     }
-    // Show submission form for students
+    // Assignment submission controller
     public function submitForm($id)
     {
         $assignment = Assignment::findOrFail($id);
-        return view('assignments.submit', compact('assignment'));
+        $user = auth()->user();
+
+        if ($user->hasRole('student')) {
+            $submission = $assignment->submissions()->where('student_id', $user->student->id)->first();
+        } 
+        if ($user->hasRole('teacher')) {
+            $submission = $assignment->submissions()->with('student.user')->get();
+        } 
+
+        return view('assignments.submit', compact('assignment', 'submission'));
     }
 
-    // Store student submission
     public function submit(Request $request, $id)
     {
         $request->validate([
@@ -140,8 +159,11 @@ class AssignmentController extends Controller
         ]);
 
         $assignment = Assignment::findOrFail($id);
+        $student = auth()->user()->student;
         $filePath = $request->file('submission_file')->store('submissions', 'public');
-        $assignment->update([
+
+        $assignment->submissions()->create([
+            'student_id' => $student->id,
             'submission_file' => $filePath,
         ]);
 
@@ -149,14 +171,12 @@ class AssignmentController extends Controller
     }
 
     public function deleteSubmission($id)
-{
-    $assignment = Assignment::findOrFail(decrypt($id));
-    if ($assignment->submission_file) {
-        Storage::delete('public/' . $assignment->submission_file);
-    }
-    $assignment->update(['submission_file' => null]);
+    {
+        $submission = \App\Models\Submission::findOrFail(decrypt($id));
+        Storage::delete('public/' . $submission->submission_file);
+        $submission->delete();
 
-    return redirect()->route('assignments.index')->with('success', 'Submission deleted successfully.');
-}
-}
+        return redirect()->route('assignments.index')->with('success', 'Submission deleted successfully.');
+    }
+    }
 
